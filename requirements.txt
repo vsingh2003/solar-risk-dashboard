@@ -3,4 +3,8 @@ numpy
 scikit-learn
 streamlit
 plotly
-openpyxl
+langchain
+langchain-community
+langchain-openai
+faiss-cpu
+tiktoken
