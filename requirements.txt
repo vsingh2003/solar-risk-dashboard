@@ -3,9 +3,8 @@ numpy
 scikit-learn
 streamlit
 plotly
-langchain
-langchain-community
 langchain-core
+langchain-community
 langchain-openai
 faiss-cpu
 tiktoken
