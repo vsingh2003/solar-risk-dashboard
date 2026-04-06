@@ -1,8 +1,3 @@
-"""
-Solar Risk Monitor — Dashboard v4 (Client Deliverable Layout)
-Dark-themed professional UI using Plotly Express
-Run: streamlit run app.py
-"""
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -10,9 +5,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 import os
 
-# ══════════════════════════════════════════════════════════════
-# PAGE CONFIG & CSS
-# ══════════════════════════════════════════════════════════════
 st.set_page_config(
     page_title="Solar Risk Monitor",
     page_icon="⚡",
@@ -55,9 +47,6 @@ PLOTLY_DARK  = "plotly_dark"
 PLOTLY_BG    = "#0d1117"
 PLOTLY_PAPER = "#161b22"
 
-# ══════════════════════════════════════════════════════════════
-# LOAD DATA
-# ══════════════════════════════════════════════════════════════
 @st.cache_data
 def load_data():
     df = pd.read_csv("final_anomaly_results.csv")
@@ -78,9 +67,6 @@ except FileNotFoundError:
 
 feat_imp_df = load_feat_imp()
 
-# ══════════════════════════════════════════════════════════════
-# SIDEBAR — FILTERS
-# ══════════════════════════════════════════════════════════════
 with st.sidebar:
     st.markdown("## ⚡ Solar Risk Monitor")
     st.caption("Anomaly Detection & Risk Monitoring")
@@ -104,7 +90,6 @@ with st.sidebar:
     st.markdown("---")
     st.caption("Built with Python · Streamlit · Plotly")
 
-# Apply filters
 fdf = df.copy()
 if selected_unit != 'All Units':
     fdf = fdf[fdf['unit_id'] == selected_unit]
@@ -113,9 +98,6 @@ if len(date_range) == 2:
 if show_anomalies_only:
     fdf = fdf[fdf['anomaly_flag'] == 1]
 
-# ══════════════════════════════════════════════════════════════
-# GLOBAL HEADER
-# ══════════════════════════════════════════════════════════════
 st.markdown("# ⚡ Solar Risk Monitor")
 st.markdown(
     f"**{selected_unit}** &nbsp;|&nbsp; "
@@ -125,21 +107,14 @@ st.markdown(
 )
 st.markdown("---")
 
-# ══════════════════════════════════════════════════════════════
-# TABS
-# ══════════════════════════════════════════════════════════════
 tab1, tab2, tab3 = st.tabs([
     "📊 Dashboard & Monitoring",
     "🔍 Exploratory Data Analysis (EDA)",
     "🧠 Explainable AI (XAI) & Flags"
 ])
 
-# ==============================================================
-# TAB 1: DASHBOARD & MONITORING
-# ==============================================================
 with tab1:
 
-    # ── Section 1: KPI Metrics Row ─────────────────────────────
     total_anomalies   = int(fdf['anomaly_flag'].sum())
     total_units       = int(fdf['unit_id'].nunique())
     avg_daily_yield   = fdf['daily_yield_kwh'].mean() if len(fdf) else 0
@@ -168,7 +143,6 @@ with tab1:
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("---")
 
-    # ── Section 2: Daily Yield Trend ──────────────────────────
     st.markdown("## 📈 Daily Yield Trend")
     if len(fdf) == 0:
         st.info("No records match the current filter selection.")
@@ -210,7 +184,6 @@ with tab1:
 
     st.markdown("---")
 
-    # ── Section 3: Unit Comparison Charts ─────────────────────
     st.markdown("## 🔌 Unit Performance Comparison")
     col_left, col_right = st.columns(2)
 
@@ -256,7 +229,6 @@ with tab1:
 
     st.markdown("---")
 
-    # ── Section 7: Simple Q&A Chatbot ─────────────────────────
     st.markdown("## 💬 Quick Insights — Ask a Question")
     st.caption("Try: 'most anomalies' · 'best unit' · 'average yield' · 'total anomalies' · 'how many units' · 'date range' · 'worst unit'")
 
@@ -292,9 +264,6 @@ with tab1:
         else:
             st.warning("I can answer: **most anomalies · worst/best unit · average yield · total anomalies · how many units · date range · fleet average**")
 
-# ==============================================================
-# TAB 2: EXPLORATORY DATA ANALYSIS (EDA)
-# ==============================================================
 with tab2:
     st.markdown("## 🔍 Exploratory Data Analysis (EDA)")
     st.markdown(
@@ -304,7 +273,6 @@ with tab2:
     )
     st.markdown("---")
 
-    # ── Section 4: Correlation Scatter Plot ───────────────────
     st.markdown("## 🔬 Correlation Analysis — Key Metrics")
     st.caption("Each dot is one unit-day. Red dots = flagged anomalies. Hover for full details.")
 
@@ -344,9 +312,6 @@ with tab2:
     else:
         st.info("Not enough data points in the current filter to render the scatter plot.")
 
-# ==============================================================
-# TAB 3: EXPLAINABLE AI (XAI) & FLAGS
-# ==============================================================
 with tab3:
     st.markdown("## 🧠 Explainable AI (XAI) & Flags")
     st.markdown(
@@ -356,7 +321,6 @@ with tab3:
     )
     st.markdown("---")
 
-    # ── Section 5: XAI Feature Importance ─────────────────────
     st.markdown("## 🧬 Model Overview & Feature Importance")
     st.info(
         "**Model Overview:** This pipeline uses a hybrid anomaly detection system combining **Rule-Based Heuristics** "
@@ -399,7 +363,6 @@ with tab3:
 
     st.markdown("---")
 
-    # ── Section 6: Flagged Records Table (with Explanation) ───
     st.markdown("## 🚨 Flagged Anomaly Records — XAI Explanations")
     anomaly_view = fdf[fdf['anomaly_flag'] == 1].copy()
 
@@ -424,9 +387,6 @@ with tab3:
         display_df = display_df.sort_values('Date', ascending=False)
         st.dataframe(display_df, use_container_width=True, hide_index=True)
 
-# ══════════════════════════════════════════════════════════════
-# GLOBAL FOOTER
-# ══════════════════════════════════════════════════════════════
 st.markdown("---")
 st.markdown(
     "<div style='text-align:center; color:#30363d; font-size:0.78rem; padding:8px'>"
